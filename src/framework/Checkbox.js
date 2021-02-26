@@ -1,6 +1,4 @@
-import { useContext } from "react";
 import styled from "styled-components";
-import TodoContext from "../contexts/TodoContext";
 
 const HiddenCheckbox = styled.input.attrs({ type: "checkbox" })`
   border: 0;
@@ -28,9 +26,13 @@ const StyledCheckbox = styled.div`
   height: 20px;
   border-radius: 7px;
   border: 2px solid #c9c9c9;
-  transition: all 150ms;
+  transition: visibility 150ms;
+  cursor: pointer;
   ${CheckIcon} {
     visibility: ${(props) => (props.checked ? "visible" : "hidden")};
+  }
+  ${HiddenCheckbox}:focus + & {
+    outline: 3px solid rgb(12, 224, 65);
   }
 `;
 
@@ -39,15 +41,12 @@ const CheckboxContainer = styled.div`
   vertical-align: middle;
 `;
 
-const Checkbox = ({ className, ...props }) => {
-  const isCompleted = useContext(TodoContext);
-  console.log(isCompleted);
-
+const Checkbox = ({ onChange, isCompleted }) => {
   return (
-    <CheckboxContainer className={className}>
-      <HiddenCheckbox checked={isCompleted} {...props} />
-      <StyledCheckbox checked={isCompleted}>
-        <CheckIcon viewBox="0 0 34 34">
+    <CheckboxContainer>
+      <HiddenCheckbox aria-label="Done with todo" onChange={() => onChange()} />
+      <StyledCheckbox aria-hidden="true" checked={isCompleted}>
+        <CheckIcon aria-hidden="true" viewBox="0 0 34 34">
           <polyline points="38 -4 17 22 6 13" />
         </CheckIcon>
       </StyledCheckbox>
